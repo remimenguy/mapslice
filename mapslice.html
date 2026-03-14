@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Géocodage CSV & zones éditables</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  <link rel="stylesheet" href="./public/css/styles.css" />
+  <script src="./public/js/app.js" defer></script>
+</head>
+<body>
+  <div id="controls-top-right">
+    <button id="exportSessionBtn" disabled>Exporter la session</button>
+    <input type="file" id="importSessionInput" accept="application/json" />
+  </div>
+
+  <div id="sidebar">
+    <h1>Géocodage & zones</h1>
+    <label for="csvInput">CSV (nom, adresse) :</label>
+    <input type="file" id="csvInput" accept=".csv" />
+    <button id="geocodeBtn" disabled>Géocoder</button>
+    <button id="geocodeFastBtn" disabled>Géocoder rapide</button>
+    <button id="validateZoneBtn" disabled>Valider la zone</button>
+    <button id="applyChangesBtn" disabled>Valider modif.</button>
+    <button id="togglePinsBtn" disabled>Afficher les pins</button>
+    <div id="status">Aucun CSV chargé.</div>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="results">
+    <h2>Répertoire par zone :</h2>
+  </div>
+
+  <div id="message-modal">
+    <div class="modal-content">
+      <h2 id="message-modal-title">Message</h2>
+      <input type="text" id="msg-title" placeholder="Titre" />
+      <textarea id="msg-body" placeholder="Corps du message (utilisez XXXX pour le nom)" rows="6"></textarea>
+      <div class="modal-actions">
+        <button id="msg-cancel">Annuler</button>
+        <button id="msg-confirm">Confirmer</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
