@@ -1,84 +1,119 @@
 # MapSlice
 
-> Géocodage CSV et zones éditables sur carte interactive.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Node](https://img.shields.io/badge/node-%E2%89%A518-339933.svg?logo=node.js&logoColor=white)
+![Leaflet](https://img.shields.io/badge/Leaflet-1.x-199900.svg?logo=leaflet&logoColor=white)
+![Status](https://img.shields.io/badge/status-active-success.svg)
 
-**MapSlice** est une application web qui transforme un fichier CSV de contacts (nom + adresse) en points géolocalisés sur une carte. Vous pouvez ensuite dessiner des zones polygonales pour regrouper automatiquement les contacts par secteur, éditer les résultats, et exporter/importer la session de travail.
+> Turn a CSV of addresses into an interactive map, then slice it into editable zones to build per-area contact directories.
 
-## ✨ Fonctionnalités
+-----
 
-- 📍 **Géocodage CSV** — Import d’un fichier CSV (nom, adresse) et conversion en coordonnées géographiques.
-- ⚡ **Mode rapide** — Géocodage accéléré pour les gros fichiers.
-- 🗺️ **Carte interactive** — Visualisation des points sur une carte Leaflet avec clustering automatique des marqueurs.
-- ✏️ **Zones éditables** — Dessin et édition de polygones pour découper la carte en secteurs.
-- 📋 **Répertoire par zone** — Génération automatique d’une liste des contacts présents dans chaque zone.
-- 💬 **Composition de messages** — Création de messages personnalisés avec template (utilisez `XXXX` pour insérer le nom).
-- 💾 **Session persistante** — Export/import de la session complète au format JSON pour reprendre le travail plus tard.
+## Concept
 
-## 🛠️ Stack technique
+MapSlice bridges the gap between a flat contact list and field-level territory management. You feed it a CSV containing names and addresses; it geocodes each entry, plots the results on an interactive map, and lets you draw custom polygonal zones on top of the map. As soon as a zone is drawn, MapSlice computes which contacts fall inside it and produces a directory grouped by zone — ready to be exported, edited, or used as the basis for targeted communication.
 
-- **Backend** : [Node.js](https://nodejs.org/) (≥ 18) — serveur HTTP statique léger sans dépendance externe.
-- **Frontend** : HTML / CSS / JavaScript vanilla (aucun framework).
-- **Cartographie** : [Leaflet](https://leafletjs.com/) + [Leaflet.draw](https://github.com/Leaflet/Leaflet.draw) + [Leaflet.markercluster](https://github.com/Leaflet/Leaflet.markercluster).
-- **Parsing CSV** : [PapaParse](https://www.papaparse.com/).
-- **Calculs géospatiaux** : [Turf.js](https://turfjs.org/) (point-in-polygon, etc.).
+Typical use cases include door-to-door campaigns, sales territory planning, distribution route design, local outreach, and any workflow that requires splitting a customer or member base into geographic sectors.
 
-## 📋 Prérequis
+The application runs locally as a lightweight Node.js server with a vanilla JavaScript front-end, so it has no database, no cloud dependency, and no build step.
 
-- [Node.js](https://nodejs.org/) version **18 ou supérieure**.
-- Un navigateur moderne (Chrome, Firefox, Safari, Edge).
+-----
 
-## 🚀 Installation
+## Features
+
+- **CSV import** — Load any CSV file containing names and addresses.
+- **Geocoding** — Resolve addresses to coordinates, with a standard mode and a fast bulk mode.
+- **Interactive map** — Pan, zoom, and explore your data on a Leaflet-powered map.
+- **Marker clustering** — Automatic aggregation of nearby points for readability at any zoom level.
+- **Editable zones** — Draw, reshape, and delete polygonal zones directly on the map.
+- **Per-zone directory** — Automatic listing of every contact contained in each zone.
+- **Message composer** — Compose personalized messages using a simple `XXXX` placeholder for the contact name.
+- **Session export/import** — Save the full working state (points + zones + edits) as JSON and reload it later.
+
+-----
+
+## Tech stack
+
+|Layer      |Technology                                              |
+|-----------|--------------------------------------------------------|
+|Runtime    |Node.js (>= 18), zero external dependencies             |
+|Front-end  |Plain HTML / CSS / JavaScript (no framework, no bundler)|
+|Mapping    |Leaflet, Leaflet.draw, Leaflet.markercluster            |
+|CSV parsing|PapaParse                                               |
+|Geospatial |Turf.js (point-in-polygon, geometry operations)         |
+|Testing    |Native Node.js test runner (`node --test`)              |
+
+-----
+
+## Requirements
+
+- Node.js **18 or later**
+- A modern browser (Chrome, Firefox, Safari, or Edge)
+
+-----
+
+## Installation
 
 ```bash
-# Cloner le dépôt
+# Clone the repository
 git clone https://github.com/remimenguy/mapslice.git
 cd mapslice
 
-# Démarrer le serveur
+# Start the server
 npm start
 ```
 
-L’application est ensuite accessible à l’adresse <http://localhost:3000> (ou le port défini par le serveur).
+Then open the application in your browser at the URL printed in the terminal (the server defaults to a local port).
 
-## 📖 Utilisation
+-----
 
-1. **Charger un CSV** depuis le panneau latéral. Le fichier doit contenir au minimum deux colonnes : `nom` et `adresse`.
-1. Cliquer sur **Géocoder** (qualité standard) ou **Géocoder rapide** (volume).
-1. Une fois les points placés sur la carte, dessiner une zone à l’aide des outils Leaflet.draw.
-1. Cliquer sur **Valider la zone** pour l’enregistrer et générer son répertoire.
-1. Utiliser **Afficher les pins** pour basculer la visibilité des marqueurs.
-1. **Exporter la session** pour sauvegarder l’état complet (points + zones) en JSON, et la réimporter plus tard.
+## Usage
 
-### Format CSV attendu
+1. **Load a CSV** from the sidebar. The file must include at least a name column and an address column.
+1. Click **Geocode** for the standard pipeline, or **Fast geocode** for larger files.
+1. Once the markers appear on the map, use the drawing tools to outline a zone.
+1. Click **Validate zone** to persist it and generate its directory.
+1. Use **Apply changes** to commit edits made to points or zones.
+1. Toggle marker visibility with **Show pins**.
+1. Click **Export session** to download the current state as JSON, or use the file picker to **import** a previously saved session.
+
+### Expected CSV format
 
 ```csv
-nom,adresse
-Dupont,1 rue de la Paix 75002 Paris
-Martin,12 avenue Victor Hugo 69006 Lyon
+name,address
+Doe,1 Infinite Loop, Cupertino, CA
+Smith,10 Downing Street, London
+Martin,12 Avenue Victor Hugo, Lyon
 ```
 
-## 🧪 Tests
+-----
 
-Les tests utilisent le runner natif de Node :
+## Project structure
+
+```
+mapslice/
+├── public/           Static assets served to the browser
+│   ├── css/          Stylesheets
+│   └── js/           Front-end application code
+├── tests/            Unit tests (node --test)
+├── mapslice.html     Main HTML entry point
+├── server.js         Node.js static server
+├── package.json
+└── LICENSE
+```
+
+-----
+
+## Testing
 
 ```bash
 npm test
 ```
 
-## 📁 Structure du projet
+Tests run with the built-in Node.js test runner, so no additional dependency is required.
 
-```
-mapslice/
-├── public/           # Assets statiques (CSS, JS)
-│   ├── css/
-│   └── js/
-├── tests/            # Tests unitaires (node --test)
-├── mapslice.html     # Page principale de l'application
-├── server.js         # Serveur Node.js
-├── package.json
-└── LICENSE
-```
+-----
 
-## 📄 Licence
+## License
 
-Distribué sous licence [MIT](LICENSE).
+Released under the [MIT License](LICENSE).
